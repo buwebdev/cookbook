@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h2>Recipe Update Form</h2>
+  <form id="recipeForm">
+    <label for="id">Recipe ID:</label><br>
+    <input type="text" id="id" name="id"><br>
+    <label for="name">Recipe Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+    <input type="submit" value="Submit">
+  </form>
+
+  <h2>Recipe Details</h2>
+  <div id="recipeDetails"></div>
+
+  <script>
+    document.getElementById('recipeForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const id = document.getElementById('id').value;
+      const name = document.getElementById('name').value;
+
+      fetch(`http://localhost:3000/api/recipes/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: name }),
+      })
+      .then(() => fetch(`http://localhost:3000/api/recipes/${id}`))
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('recipeDetails').innerHTML = `Name: ${data.name}`;
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+</html>
